@@ -5,224 +5,298 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>TrustSwap P2P Web App</title>
 <style>
-  /* === Общий стиль === */
+  /* === Telegram-like dark theme base === */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  :root {
+    --tg-bg: #1e1e1e;
+    --tg-bg-alt: #2a2a2a;
+    --tg-text-primary: #e6e6e6;
+    --tg-text-secondary: #a3a3a3;
+    --tg-accent: #37aee2;
+    --tg-button-bg: #37aee2;
+    --tg-button-bg-hover: #2f98cc;
+    --tg-border: #3a3a3a;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #ddd;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background-color: var(--tg-bg);
+    color: var(--tg-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   header {
-    background: #1f1f1f;
-    padding: 1rem;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 18px;
+    border-bottom: 1px solid var(--tg-border);
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: 700;
-    border-bottom: 1px solid #333;
-  }
-
-  main {
-    flex: 1;
-    padding: 1rem;
-    max-width: 900px;
-    margin: 0 auto;
-    width: 100%;
   }
 
   nav {
     display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--tg-border);
   }
 
   nav button {
-    background: #222;
+    flex: 1;
+    background: none;
     border: none;
-    color: #aaa;
-    padding: 0.75rem 1.5rem;
-    margin: 0 0.3rem;
-    cursor: pointer;
+    padding: 12px 0;
     font-weight: 600;
-    border-radius: 6px 6px 0 0;
-    transition: background 0.3s, color 0.3s;
+    font-size: 14px;
+    color: var(--tg-text-secondary);
+    cursor: pointer;
+    transition: color 0.15s ease-in-out, border-bottom 0.15s ease-in-out;
+    border-bottom: 3px solid transparent;
   }
 
   nav button.active {
-    background: #4caf50;
-    color: white;
+    color: var(--tg-accent);
+    border-bottom: 3px solid var(--tg-accent);
     cursor: default;
   }
 
-  section {
-    background: #1e1e1e;
-    border-radius: 0 6px 6px 6px;
-    padding: 1rem;
+  main {
+    padding: 16px;
   }
 
-  /* ===== Кошелек ===== */
-
-  .wallet-balance {
+  /* === Wallet section === */
+  #wallet-section {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .wallet-address {
+    background: var(--tg-bg-alt);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: monospace;
+    font-size: 14px;
+    text-align: center;
+    user-select: all;
+    cursor: pointer;
+    border: 1px solid var(--tg-border);
+    transition: background-color 0.3s;
+  }
+  .wallet-address:hover {
+    background: #353535;
+  }
+
+  .balance-grid {
+    display: flex;
+    gap: 16px;
     justify-content: center;
-    margin-bottom: 1rem;
   }
 
   .balance-item {
-    background: #2a2a2a;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    width: 120px;
+    background: var(--tg-bg-alt);
+    padding: 16px 24px;
+    border-radius: 12px;
+    width: 100px;
     text-align: center;
+    border: 1px solid var(--tg-border);
   }
 
   .balance-item h3 {
-    margin: 0 0 0.5rem 0;
-    color: #bbb;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--tg-text-secondary);
   }
 
   .balance-item p {
-    font-size: 1.3rem;
+    font-size: 20px;
     font-weight: 700;
     margin: 0;
   }
 
-  .wallet-address {
-    background: #2a2a2a;
-    padding: 1rem;
-    border-radius: 8px;
-    text-align: center;
-    font-family: monospace;
-    user-select: all;
-    margin-bottom: 1rem;
+  .btn-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
   }
 
   .btn {
-    background: #4caf50;
+    flex: 1;
+    max-width: 140px;
+    background-color: var(--tg-button-bg);
+    border-radius: 14px;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
     color: white;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 0;
     cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .btn:hover {
+    background-color: var(--tg-button-bg-hover);
+  }
+
+  /* === P2P section === */
+  #p2p-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  form.p2p-form {
+    background: var(--tg-bg-alt);
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid var(--tg-border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+  }
+
+  form.p2p-form label {
+    grid-column: span 2;
     font-weight: 600;
-    transition: background 0.3s;
+    font-size: 13px;
+    color: var(--tg-text-secondary);
   }
 
-  .btn:hover:not(:disabled) {
-    background: #45a045;
-  }
-
-  .btn:disabled {
-    background: #3a7d3a;
-    cursor: default;
-  }
-
-  /* ===== P2P ===== */
-
-  .p2p-form {
-    margin-bottom: 1rem;
-    background: #2a2a2a;
-    padding: 1rem;
-    border-radius: 8px;
-  }
-
-  .p2p-form label {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-weight: 600;
-  }
-
-  .p2p-form input, .p2p-form select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 0.8rem;
-    border-radius: 4px;
+  form.p2p-form select,
+  form.p2p-form input {
+    grid-column: span 2;
+    background: #292929;
     border: none;
-    background: #3a3a3a;
+    border-radius: 10px;
     color: white;
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+
+  form.p2p-form button {
+    grid-column: span 2;
+    background-color: var(--tg-button-bg);
+    border-radius: 14px;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  form.p2p-form button:hover {
+    background-color: var(--tg-button-bg-hover);
   }
 
   .offers-list {
-    max-height: 300px;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .offer-item {
-    background: #292929;
-    margin-bottom: 0.8rem;
-    padding: 0.8rem;
-    border-radius: 6px;
+    background: var(--tg-bg-alt);
+    padding: 14px 16px;
+    border-radius: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid var(--tg-border);
   }
 
   .offer-info {
-    flex-grow: 1;
+    color: var(--tg-text-primary);
   }
 
   .offer-type-buy {
     color: #4caf50;
     font-weight: 700;
   }
-
   .offer-type-sell {
     color: #e53935;
     font-weight: 700;
   }
 
-  /* ===== Биржи ===== */
+  .offer-btn {
+    background-color: var(--tg-button-bg);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  .offer-btn:hover {
+    background-color: var(--tg-button-bg-hover);
+  }
 
-  .exchanges-list {
+  /* === Exchanges section === */
+
+  #exchanges-section {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .exchange-item {
-    background: #292929;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    width: 180px;
-    text-align: center;
+    background: var(--tg-bg-alt);
+    padding: 14px 20px;
+    border-radius: 14px;
+    border: 1px solid var(--tg-border);
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 15px;
   }
 
-  .exchange-item h4 {
-    margin: 0 0 0.5rem 0;
+  .exchange-name {
+    color: var(--tg-text-secondary);
   }
 
   .exchange-price {
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: #4caf50;
+    color: var(--tg-accent);
   }
 
-  /* ===== Сообщения ===== */
-
-  .message {
-    background: #3a3a3a;
-    padding: 0.8rem;
-    margin-bottom: 0.5rem;
-    border-radius: 6px;
+  #refresh-rates {
+    max-width: 160px;
+    align-self: center;
+    background-color: var(--tg-button-bg);
+    border-radius: 14px;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  #refresh-rates:hover {
+    background-color: var(--tg-button-bg-hover);
   }
 
-  /* ===== Общие ===== */
-
-  .hidden {
-    display: none;
-  }
-
+  /* Responsive */
   @media (max-width: 600px) {
-    .wallet-balance {
+    form.p2p-form {
+      grid-template-columns: 1fr;
+    }
+    .balance-grid {
       flex-direction: column;
       align-items: center;
     }
-    .exchange-item {
+    .btn-row {
+      flex-direction: column;
+      align-items: center;
+    }
+    .btn {
+      max-width: none;
       width: 100%;
     }
   }
@@ -230,19 +304,20 @@
 </head>
 <body>
 
-<header>TrustSwap P2P Web App</header>
+<header>TrustSwap P2P</header>
 
 <nav>
-  <button id="tab-wallet" class="active">Кошелёк</button>
-  <button id="tab-p2p">P2P</button>
-  <button id="tab-exchanges">Биржи</button>
+  <button id="tab-wallet" class="active" aria-selected="true">Кошелёк</button>
+  <button id="tab-p2p" aria-selected="false">P2P</button>
+  <button id="tab-exchanges" aria-selected="false">Биржи</button>
 </nav>
 
 <main>
-  <!-- Кошелёк -->
   <section id="wallet-section">
-    <div class="wallet-address" id="wallet-address" title="Нажми чтобы скопировать">0xA60be55354b85948c110D9C3153c14d06D140205</div>
-    <div class="wallet-balance">
+    <div class="wallet-address" id="wallet-address" title="Нажмите, чтобы скопировать адрес">
+      0xA60be55354b85948c110D9C3153c14d06D140205
+    </div>
+    <div class="balance-grid">
       <div class="balance-item">
         <h3>USDT</h3>
         <p id="balance-usdt">1234.56</p>
@@ -256,15 +331,14 @@
         <p id="balance-btc">0.052</p>
       </div>
     </div>
-    <div style="display: flex; gap: 1rem; justify-content: center;">
+    <div class="btn-row">
       <button class="btn" id="btn-receive">Получить</button>
       <button class="btn" id="btn-send">Отправить</button>
     </div>
   </section>
 
-  <!-- P2P -->
-  <section id="p2p-section" class="hidden">
-    <form id="offer-form" class="p2p-form">
+  <section id="p2p-section" hidden>
+    <form class="p2p-form" id="offer-form">
       <label for="offer-type">Тип</label>
       <select id="offer-type" required>
         <option value="">Выберите...</option>
@@ -289,83 +363,77 @@
       <label for="offer-payment">Способ оплаты</label>
       <input type="text" id="offer-payment" placeholder="Например, Monobank" required />
 
-      <button type="submit" class="btn" style="width: 100%;">Создать объявление</button>
+      <button type="submit">Создать объявление</button>
     </form>
 
     <h3>Активные объявления</h3>
-    <div id="offers-list" class="offers-list"></div>
+    <div class="offers-list" id="offers-list">
+      <p>Объявлений нет.</p>
+    </div>
   </section>
 
-  <!-- Биржи -->
-  <section id="exchanges-section" class="hidden">
-    <div class="exchanges-list">
-      <div class="exchange-item">
-        <h4>Binance</h4>
-        <div class="exchange-price" id="binance-price">39.25 UAH</div>
-      </div>
-      <div class="exchange-item">
-        <h4>Bybit</h4>
-        <div class="exchange-price" id="bybit-price">39.10 UAH</div>
-      </div>
-      <div class="exchange-item">
-        <h4>OKX</h4>
-        <div class="exchange-price" id="okx-price">39.05 UAH</div>
-      </div>
+  <section id="exchanges-section" hidden>
+    <div class="exchange-item">
+      <div class="exchange-name">Binance</div>
+      <div class="exchange-price" id="binance-price">39.25 UAH</div>
     </div>
-    <button class="btn" style="margin-top: 1rem;" id="refresh-rates">Обновить курсы</button>
+    <div class="exchange-item">
+      <div class="exchange-name">Bybit</div>
+      <div class="exchange-price" id="bybit-price">39.10 UAH</div>
+    </div>
+    <div class="exchange-item">
+      <div class="exchange-name">OKX</div>
+      <div class="exchange-price" id="okx-price">39.05 UAH</div>
+    </div>
+    <button id="refresh-rates">Обновить курсы</button>
   </section>
 </main>
 
 <script>
-  // === Навигация по вкладкам ===
-  const tabWallet = document.getElementById('tab-wallet');
-  const tabP2P = document.getElementById('tab-p2p');
-  const tabExchanges = document.getElementById('tab-exchanges');
+  // === Переключение вкладок ===
+  const tabs = {
+    wallet: document.getElementById('wallet-section'),
+    p2p: document.getElementById('p2p-section'),
+    exchanges: document.getElementById('exchanges-section'),
+  };
 
-  const walletSection = document.getElementById('wallet-section');
-  const p2pSection = document.getElementById('p2p-section');
-  const exchangesSection = document.getElementById('exchanges-section');
+  const btnWallet = document.getElementById('tab-wallet');
+  const btnP2P = document.getElementById('tab-p2p');
+  const btnExchanges = document.getElementById('tab-exchanges');
 
-  function clearActiveTabs() {
-    tabWallet.classList.remove('active');
-    tabP2P.classList.remove('active');
-    tabExchanges.classList.remove('active');
-    walletSection.classList.add('hidden');
-    p2pSection.classList.add('hidden');
-    exchangesSection.classList.add('hidden');
+  function activateTab(tabName) {
+    Object.entries(tabs).forEach(([name, section]) => {
+      if (name === tabName) {
+        section.hidden = false;
+      } else {
+        section.hidden = true;
+      }
+    });
+    btnWallet.classList.toggle('active', tabName === 'wallet');
+    btnWallet.setAttribute('aria-selected', tabName === 'wallet');
+    btnP2P.classList.toggle('active', tabName === 'p2p');
+    btnP2P.setAttribute('aria-selected', tabName === 'p2p');
+    btnExchanges.classList.toggle('active', tabName === 'exchanges');
+    btnExchanges.setAttribute('aria-selected', tabName === 'exchanges');
   }
 
-  tabWallet.addEventListener('click', () => {
-    clearActiveTabs();
-    tabWallet.classList.add('active');
-    walletSection.classList.remove('hidden');
-  });
-
-  tabP2P.addEventListener('click', () => {
-    clearActiveTabs();
-    tabP2P.classList.add('active');
-    p2pSection.classList.remove('hidden');
-  });
-
-  tabExchanges.addEventListener('click', () => {
-    clearActiveTabs();
-    tabExchanges.classList.add('active');
-    exchangesSection.classList.remove('hidden');
-  });
+  btnWallet.onclick = () => activateTab('wallet');
+  btnP2P.onclick = () => activateTab('p2p');
+  btnExchanges.onclick = () => activateTab('exchanges');
 
   // === Копирование адреса кошелька ===
-  const walletAddress = document.getElementById('wallet-address');
-  walletAddress.addEventListener('click', () => {
-    navigator.clipboard.writeText(walletAddress.textContent)
+  const walletAddressEl = document.getElementById('wallet-address');
+  walletAddressEl.onclick = () => {
+    navigator.clipboard.writeText(walletAddressEl.textContent)
       .then(() => alert('Адрес кошелька скопирован!'))
-      .catch(() => alert('Не удалось скопировать адрес'));
-  });
+      .catch(() => alert('Ошибка копирования'));
+  };
 
-  // === Пример баланса (в будущем можно получать из API) ===
-  let balances = {
-    USDT: 1234.56,
-    TON: 203.12,
-    BTC: 0.052
+  // === Балансы ===
+  const balances = {
+    USDT: 0.00,
+    TON: 0.00,
+    BTC: 0.00
   };
 
   function updateBalances() {
@@ -373,14 +441,11 @@
     document.getElementById('balance-ton').textContent = balances.TON.toFixed(2);
     document.getElementById('balance-btc').textContent = balances.BTC.toFixed(5);
   }
-
   updateBalances();
 
-  // === Обработка формы создания объявления ===
+  // === P2P объявления ===
   const offerForm = document.getElementById('offer-form');
   const offersList = document.getElementById('offers-list');
-
-  // Массив объявлений
   let offers = [];
 
   function renderOffers() {
@@ -389,91 +454,25 @@
       return;
     }
     offersList.innerHTML = '';
-    offers.forEach((offer, index) => {
+    offers.forEach((offer, i) => {
       const div = document.createElement('div');
       div.className = 'offer-item';
-
-      const infoDiv = document.createElement('div');
-      infoDiv.className = 'offer-info';
 
       const typeClass = offer.type === 'buy' ? 'offer-type-buy' : 'offer-type-sell';
       const typeText = offer.type === 'buy' ? 'Купить' : 'Продать';
 
-      infoDiv.innerHTML = `<span class="${typeClass}">${typeText} ${offer.currency}</span><br>
-        Кол-во: ${offer.amount}<br>
-        Цена: ${offer.price} UAH<br>
-        Оплата: ${offer.payment}`;
+      div.innerHTML = `
+        <div class="offer-info">
+          <span class="${typeClass}">${typeText} ${offer.currency}</span><br />
+          Кол-во: ${offer.amount}<br />
+          Цена: ${offer.price} UAH<br />
+          Оплата: ${offer.payment}
+        </div>
+        <button class="offer-btn">${offer.type === 'buy' ? 'Продать' : 'Купить'}</button>
+      `;
 
-      const btn = document.createElement('button');
-      btn.className = 'btn';
-      btn.textContent = offer.type === 'buy' ? 'Продать' : 'Купить';
-      btn.style.marginLeft = '1rem';
-
-      btn.onclick = () => {
-        alert(`Вы выбрали ${btn.textContent} ${offer.amount} ${offer.currency} по цене ${offer.price} UAH.\n\nЭто пример — дальше можно реализовать чат и сделки.`);
+      div.querySelector('button').onclick = () => {
+        alert(`Вы выбрали ${typeText} ${offer.amount} ${offer.currency} по цене ${offer.price} UAH\n\nДальше можно реализовать чат и сделки.`);
       };
 
-      div.appendChild(infoDiv);
-      div.appendChild(btn);
-
-      offersList.appendChild(div);
-    });
-  }
-
-  offerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const type = document.getElementById('offer-type').value;
-    const currency = document.getElementById('offer-currency').value;
-    const amount = parseFloat(document.getElementById('offer-amount').value);
-    const price = parseFloat(document.getElementById('offer-price').value);
-    const payment = document.getElementById('offer-payment').value.trim();
-
-    if (!type || !currency || isNaN(amount) || isNaN(price) || !payment) {
-      alert('Пожалуйста, заполните все поля корректно.');
-      return;
-    }
-
-    offers.push({ type, currency, amount, price, payment });
-    renderOffers();
-    offerForm.reset();
-  });
-
-  // === Биржевые курсы (заглушка, можно подключить API) ===
-  const binancePriceEl = document.getElementById('binance-price');
-  const bybitPriceEl = document.getElementById('bybit-price');
-  const okxPriceEl = document.getElementById('okx-price');
-
-  const mockPrices = {
-    binance: 39.25,
-    bybit: 39.10,
-    okx: 39.05
-  };
-
-  function updateRates() {
-    binancePriceEl.textContent = mockPrices.binance.toFixed(2) + ' UAH';
-    bybitPriceEl.textContent = mockPrices.bybit.toFixed(2) + ' UAH';
-    okxPriceEl.textContent = mockPrices.okx.toFixed(2) + ' UAH';
-  }
-
-  document.getElementById('refresh-rates').addEventListener('click', () => {
-    // Здесь можно добавить реальный запрос API и обновить mockPrices
-    alert('Обновление курсов пока заглушка.');
-    updateRates();
-  });
-
-  updateRates();
-
-  // === Кнопки Получить и Отправить (пока показываем просто alert) ===
-  document.getElementById('btn-receive').addEventListener('click', () => {
-    alert('Функция получения средств пока не реализована.');
-  });
-
-  document.getElementById('btn-send').addEventListener('click', () => {
-    alert('Функция отправки средств пока не реализована.');
-  });
-
-</script>
-
-</body>
-</html>
+      offersList.append
